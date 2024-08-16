@@ -42,7 +42,6 @@ router.post('/login',passportCallError("login"),async(req,res)=>{
     delete authenticatedUser.password
     req.session.user = authenticatedUser    
     
-    //**bug - pending to fic: headers on testing are different than on direct client DOM a/o POSTMAN**
         const acceptHeader = req.headers['accept']
         if(acceptHeader?.includes('text/html')){
             return res.status(301).redirect('/products')

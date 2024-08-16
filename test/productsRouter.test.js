@@ -29,6 +29,7 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             expect(body.payload).to.exist
             expect(Array.isArray(body.payload)).to.exist
             expect(Array.isArray(body.payload)).to.be.true    
+            expect(body.status).to.equal("success")
             let producto=body.payload[0]           
             expect(producto).has.property("_id")
             expect(producto).has.property("code")
@@ -56,11 +57,13 @@ describe("Backend Ecommerce Proyect: Products Router Test",function(){
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(400)
             expect(isValidObjectId(pid)).to.equal(false)
+            expect(body.message).to.equal('The ID# provided is not an accepted Id Format in MONGODB database.')
         })
         it("La ruta GET /api/products/:pid retorna ERROR 404 cuando :pid es válido pero no existe en la BD",async function(){
             let pid= "663d200860f80adeaa82bb5b"
             const {body,status}=await requester.get(`/api/products/${pid}`)
             expect(status).to.equal(404)
+            expect(body.message).to.equal(`Element tied to reference #${pid} was not found`)
         })
     })   
     

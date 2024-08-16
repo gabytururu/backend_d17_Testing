@@ -42,15 +42,18 @@ export class CartsController{
         res.setHeader('Content-type', 'application/json');
     
         if(!isValidObjectId(cid)){
-            return res.status(400).json({error:`The Cart ID# provided is not an accepted Id Format in MONGODB database. Please verify your Cart ID# and try again`})
+            return res.status(400).json({
+                error:`Petition failed. Cart cannot be retrieved`,
+                message:`The Cart ID# provided is not an accepted Id Format in MONGODB database.`
+            })
         }
     
         try {
             const matchingCart = await cartsService.getCartById(cid) 
             if(!matchingCart){
                 return res.status(404).json({
-                    error: `ERROR: Cart id# provided was not found`,
-                    message: `Resource not found: The Cart id provided (id#${cid}) does not exist in our database. Please verify and try again`
+                    error: `Cart was not found`,
+                    message: `The Cart id provided (id#${cid}) does not exist in our database`
                 })
             }        
             return res.status(200).json({payload: matchingCart})

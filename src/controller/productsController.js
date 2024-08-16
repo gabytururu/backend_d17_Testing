@@ -47,7 +47,10 @@ export class ProductsController{
         res.setHeader('Content-type', 'application/json'); 
        
         if(!isValidObjectId(id)){        
-            return res.status(400).json({error:`The ID# provided is not an accepted Id Format in MONGODB database. Please verify your ID# and try again`})
+            return res.status(400).json({
+                error: "Petition cannot be processed",
+                message:`The ID# provided is not an accepted Id Format in MONGODB database.`
+            })
         }
     
         try{          

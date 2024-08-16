@@ -16,7 +16,7 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
     })
 
     describe("POST api/sessions/login -> enviando datos de user sin privilegios", async function(){
-        it("La ruta POST /api/sessions/login enviando datos incorrectos, retorna Error 401", async function(){
+        it("La ruta POST /api/sessions/login enviando datos incompletos, retorna Error 401", async function(){
             const response = await requester.post("/api/sessions/login")
             expect(response.status).to.equal(401)
             expect(response.body.error).to.equal('Missing credentials')
@@ -26,6 +26,7 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
             const response = await requester.post("/api/sessions/login").send(user)
             expect(response.status).to.equal(401)
             expect(response.body.error).includes('invalid password')
+            expect(response.body.error).to.equal("Login failed - invalid password please verify and try again")
         })
     })
 
@@ -47,11 +48,12 @@ describe("Backend Ecommerce Proyect: Sessions Router Test",function(){
     })
 
     describe("GET api/sessions/current",async function(){
-        it("a ruta GET /api/sessions/current, que retorna el usuario loggeado al momento",async function(){
+        it("a ruta GET /api/sessions/current, opera OK y retorna el usuario loggeado al momento",async function(){
             const response=await requester.get("/api/sessions/current")
             expect(response.status).to.equal(200)
             expect(response.body).to.has.property("payload")
             expect(response.body.payload).to.include.keys("fullName","email","cart")
+            expect(response.body.message).to.equal("current user was obtained successfully")
         })
     })
 

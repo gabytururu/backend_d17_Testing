@@ -16,6 +16,7 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             expect(status).to.equal(401)
             expect(body).to.exist   
             expect(body.type).to.equal("Authentication failed")   
+            expect(body.message).to.equal("A valid user must be registered and logged in to proceed")
         })  
         it("La ruta GET /api/carts con usuario invalido retorna Error 403",async function(){
             let user={"email":"pp@test.com", "password":"123456"}
@@ -28,6 +29,7 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
             expect(status).to.equal(403)
             expect(body).to.exist   
             expect(body.type).to.equal("Authorization failed")   
+            expect(body.message).to.equal("Content is restricted to users with privileges")
         })    
     })
     
@@ -35,7 +37,7 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
         before(async function(){
             let admin={"email":"adminCoder@coder.com", "password":"adminCod3r123"}
             try {
-               user = await requester.post("/api/sessions/login").send(admin)            
+               let user = await requester.post("/api/sessions/login").send(admin)            
             } catch (error) {
                 console.log(`Error attempting LOGIN in RouterCarts tests: ${error}`)
             }
@@ -101,14 +103,16 @@ describe("Backend Ecommerce Proyect: Carts Router Test",function(){
         })
         it("La ruta GET /api/carts/:cid retorna ERROR cuando :cid no es un formato válido",async function(){
             let cid= "66340884792a6e5bf8ff"
-            const {status}=await requester.get(`/api/carts/${cid}`)
+            const {status,body}=await requester.get(`/api/carts/${cid}`)
             expect(status).to.equal(400)
             expect(isValidObjectId(cid)).to.equal(false)
+            expect(body.message).to.equal(`The Cart ID# provided is not an accepted Id Format in MONGODB database.`)
         })
         it("La ruta GET /api/products/:cid retorna ERROR 404 cuando :cid es válido pero no existe en la BD",async function(){
             let cid= "66340884792a6e5bf8ff52f9"
-            const {status}=await requester.get(`/api/carts/${cid}`)
+            const {status,body}=await requester.get(`/api/carts/${cid}`)
             expect(status).to.equal(404)
+            expect(body.message).to.equal(`The Cart id provided (id#${cid}) does not exist in our database`)
         })
     })
 })
